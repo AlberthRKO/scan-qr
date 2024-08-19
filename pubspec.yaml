@@ -63,6 +63,7 @@ dependencies:
   image_picker: ^1.0.8
   url_launcher: ^6.2.4
   lottie: ^2.7.0
+  webview_flutter: ^4.8.0
 
 dev_dependencies:
   flutter_test:

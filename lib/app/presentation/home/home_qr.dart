@@ -15,7 +15,6 @@ class _HomeQRState extends State<HomeQR> {
   final GlobalKey qrKey = GlobalKey(debugLabel: "QR");
   Barcode? result;
   QRViewController? controller;
-  bool isNavigating = false; // Añadido para evitar navegación múltiple
 
   @override
   Widget build(BuildContext context) {
@@ -57,31 +56,18 @@ class _HomeQRState extends State<HomeQR> {
   void _validateAndLaunch(String scannedData) {
     final Uri? uri = Uri.tryParse(scannedData);
     if (uri != null && (uri.isScheme("http") || uri.isScheme("https"))) {
-      if (!isNavigating) {
-        // Verifica si ya se está navegando
-        isNavigating = true;
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          _launchBrowser(uri);
-        });
-      }
+      _launchBrowser(uri);
     } else {
       _showErrorModal();
     }
   }
 
   void _launchBrowser(Uri uri) {
-    Navigator.of(context)
-        .pushReplacement(
+    Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => BrowserView(url: uri.toString()),
       ),
-    )
-        .then((_) {
-      // Marca la navegación como completada después de que se regrese a esta vista.
-      setState(() {
-        isNavigating = false;
-      });
-    });
+    );
   }
 
   void _showErrorModal() {
